@@ -1,13 +1,42 @@
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
-import { Button } from "./components/ui/button";
+import { Suspense, lazy } from "react";
+import NotFound from "./pages/NotFound";
 
-function App() {
+const Home = lazy(() => import("./pages/Home"));
+const Chat = lazy(() => import("./pages/Chat"));
+const Groups = lazy(() => import("./pages/Groups"));
+const Login = lazy(() => import("./pages/Login"));
+
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/chat/:chatId",
+    element: <Chat />,
+  },
+  {
+    path: "/groups",
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Groups />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+]);
+
+export const App = () => {
   return (
     <>
-      <div>hello world</div>
-      <Button>kowshik</Button>
+      <div>Header</div>
+      <RouterProvider router={router} />;
     </>
   );
-}
-
-export default App;
+};
